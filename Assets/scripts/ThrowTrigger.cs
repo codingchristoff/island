@@ -22,15 +22,19 @@ public class ThrowTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Player") 
-        { 
+
+        
+
+        if (col.gameObject.tag == "Player")
+        {
             CoconutLauncher.canThrow = true;
             crosshair.enabled = true;
             if (!CoconutWin.haveWon)
             {
-                textHints.SendMessage("ShowHint",@"There’s a power cell attached to this game,
-                maybe I’ll win it if I can knock down all the targets...");}
-        }
+                textHints.SendMessage("ShowHint", @"There’s a power cell attached to this game,
+                maybe I’ll win it if I can knock down all the targets...");
+            }
+        }            
     }
 
     private void OnTriggerExit(Collider col)

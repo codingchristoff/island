@@ -13,6 +13,12 @@ public class Inventory : MonoBehaviour
     // Generator
     public Texture2D[] meterCharge;
     public Renderer meter;
+    // Matches
+    bool haveMatches = false;
+    public Image matchGUI;
+    bool fireIsLit = false;
+
+    public Text textHints;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +30,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void CellPickup()
@@ -34,7 +40,7 @@ public class Inventory : MonoBehaviour
         AudioSource.PlayClipAtPoint(collectSound, transform.position);
         chargeHudGUI.texture = hudCharge[charge];
         meter.material.mainTexture = meterCharge[charge];
-        
+
     }
 
     void HUDon()
@@ -43,5 +49,37 @@ public class Inventory : MonoBehaviour
         {
             chargeHudGUI.enabled = true;
         }
+    }
+
+    void MatchPickup()
+    {
+        haveMatches = true;
+        AudioSource.PlayClipAtPoint(collectSound, transform.position);
+        matchGUI.enabled = true;
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit col)
+    {
+        if (col.gameObject.name == "campfire")
+        {
+            if (haveMatches && !fireIsLit)
+            {
+                LightFire(col.gameObject);                
+            }
+            else if (!haveMatches && !fireIsLit)
+            {
+                textHints.SendMessage("ShowHint", @"I could use this campfire to signal for help..
+           if only I could light it..");
+            }
+        }
+    }
+
+    void LightFire(GameObject campfire)
+    {
+        matchGUI.enabled = false;
+        haveMatches = false;
+        campfire.GetComponentInChildren<ParticleSystem>().Play();
+        campfire.GetComponent<AudioSource>().Play();
+        fireIsLit = true;
     }
 }
